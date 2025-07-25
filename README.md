@@ -17,7 +17,11 @@ make main
  - класс class my_application, который создан для подключения и работы с базой данных
  - класс class employee, который описывает работника. По умолчания имя базы данных, которую нужно будет создать передается в конструктор класса my_application. Имя базы данных "emp_db".
    
-По умолчанию в PostgreSQL для пользователя posgtres имеется три базы данных: postgress, template0, template1.
+По умолчанию в PostgreSQL для пользователя posgtres имеется три базы данных: 
+ -postgress
+ - template0
+ - template1.
+   
 Мы сначала подключимся к одной из них, а именно к базе данных dbname=postgres, это поле представлено в классе my_application: const char* default_database = "dbname=postgres user=postgres password=db1996 host=localhost port = 5432". Порт 5432 используется по умолчанию для PostgreSQL. 
 
 <img width="1861" height="574" alt="Screenshot from 2025-07-25 11-26-46" src="https://github.com/user-attachments/assets/c092e16f-74d4-4621-bc60-2103ee20c0a7" />
@@ -29,32 +33,26 @@ make main
 Пример запуска ./main 1
 
 # Описание работы.
-Что происходит во время запуска приложения с параметром 1. 
-- Создается объект класса my_application my_application app("emp_db") и вызывается конструктор. Имя базы данных - emp_db.
-- Внутри конструктора происходит следующее: Подключаемся к базе данных dbname=postgres, с помощью объекта connection, который на вход принимает имя базы данных dbname=postgres.
-- После этого вызываем метод check_database_exsistence(c, database_name). Принимает на вход объект типа connection и имя базы данных, которую мы хотим создать("emp_db"), с целью проверить не существует ли уже база данных с таким именем.
-  Внутри метода создаем нетранзакционный объект pqxx::nontransaction ntr(c). Он нам нужен так как если окажется, что такой базы данных с таким именем нет, её нужно будет создать выполнив SQL запрос (CREATE", " DATABASE"), который можно выполнять только в нетранзацкионном объекте. И так если заданной базы данных не существует, то создаем ее.
-Метод generate_string(buffer, "CREATE", " DATABASE", " ", db_name, " ENCODING", " UTF8", " TEMPLATE", " template0;", NULL) создает строковое представление SQL запроса, и записывает его в переменную buffer.
-Выполняем запрос и создаем базу данных r = ntr.exec(buffer);
 
-Далее так как мы передали аргументом - 1. Вызывается метод app.run_app(argv[1][0] - '0', NULL, NULL, NULL), который принимает номер режима. 
-В run_app создаем объект типа connection и подключаемся к нашей базе данных "emp_db", после этого создаем объект типа транзакция для выполнения SQL запросов pqxx::work tr(c).
-Выполняем SQL запрос и создаем таблицу, pqxx::result r = tr.exec(create_table_sql_query()). Метод create_table_sql_query - возвращает запрос в виде строки.
-Как выглядит SQL запрос для создания таблицы:
-const char* sql_query = "CREATE TABLE IF NOT EXISTS employee ("
-                                       "emp_id SERIAL PRIMARY KEY,"
-                                       "first_name VARCHAR(80) NOT NULL,"
-                                       "paternal_name VARCHAR(80) NOT NULL,"
-                                       "last_name VARCHAR(80) NOT NULL,"
-                                       "birth_date DATE NOT NULL,"				//DATE
-                                       "sex VARCHAR(80) NOT NULL"
-                                       ");";
+Что происходит во время запуска приложения с параметром 1.
+
+- Создается объект класса **my_application my_application app("emp_db")** и вызывается конструктор. Имя базы данных - **emp_db**.
+- Внутри конструктора происходит следующее: Подключаемся к базе данных **dbname=postgres**, с помощью объекта **connection(pqxx::connection)**, который на вход принимает имя базы данных **dbname=postgres**.
+- После этого вызываем метод **check_database_exsistence(c, database_name)**. Принимает на вход объект типа **connection(pqxx::connection)** и имя базы данных, которую мы хотим создать**("emp_db")**, с целью проверить не существует ли уже база данных с таким именем.
+  
+  Внутри метода создаем нетранзакционный объект **pqxx::nontransaction ntr(c)**. Он нам нужен так как если окажется, что такой базы данных с таким именем нет, её нужно будет создать выполнив SQL запрос **(CREATE", " DATABASE")**, который можно выполнять только в нетранзацкионном объекте. И так если заданной базы данных не существует, то создаем ее. Метод **generate_string(buffer, "CREATE", " DATABASE", " ", db_name, " ENCODING", " UTF8", " TEMPLATE", " template0;", NULL)** создает строковое представление SQL запроса, и записывает его в переменную **buffer**. Выполняем запрос и создаем базу данных **r = ntr.exec(buffer);** Возвращает объект типа **pqxx::result**.
+
+Далее так как мы передали аргументом - 1. Вызывается метод **app.run_app(argv[1][0] - '0', NULL, NULL, NULL)**, который принимает номер режима. В run_app создаем объект типа **connection(pqxx::connection)** и подключаемся к нашей базе данных **"emp_db"**, после этого создаем объект типа транзакция для выполнения SQL запросов pqxx::work tr(c). Выполняем SQL запрос и создаем таблицу, **pqxx::result r = tr.exec(create_table_sql_query())**. Метод **create_table_sql_query** - возвращает SQL запрос в виде строки.
+
+**Как выглядит SQL запрос для создания таблицы:**
+const char* sql_query = "CREATE TABLE IF NOT EXISTS employee (" "emp_id SERIAL PRIMARY KEY," "first_name VARCHAR(80) NOT NULL," "paternal_name VARCHAR(80) NOT NULL," "last_name VARCHAR(80) NOT NULL," "birth_date DATE NOT NULL,"	"sex VARCHAR(80) NOT NULL"");";
 
 emp_id - ключ, first_name(Имя) длиной в 80 символов, не может принимать значение NULL. Дальше отчество, фамилия, дата рождения и пол.
 
 # Итог выполнения
+Как посмотерть результат. В терминале вводим команду sudo -u posgtres psql, и после вводим \l, команда покажет все существующие базы данных.
 
-вставь картинку
+<img width="1820" height="477" alt="Screenshot from 2025-07-25 11-27-52" src="https://github.com/user-attachments/assets/7d1306ef-f3fb-4ea2-8e07-91fb5d35045d" />
 
 # Пунтк 2. Создание записи справочника сотрудников.
 Пример запуска ./main "Ivan Stepanovich Slovey" "1997-01-12" "Male"
