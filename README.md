@@ -93,8 +93,14 @@ sex - пол
 
 
 # Пункт 3. Вывод всех строк справочника сотрудников, с уникальным значением ФИО+дата, отсортированным по ФИО. Вывести ФИО, Дату рождения, пол, кол-во полных лет.
-Запускаем ./main 3
-В main вызываем функцию print_database(tr) класса my_application и передаем ему объекта типа pqxx::work для выполнения SQL запроса вида pqxx::result r = tr.exec("SELECT first_name, paternal_name, last_name, birth_date, sex FROM employee ORDER BY first_name ASC, paternal_name ASC, last_name ASC;"). Который выбирает заданные поля из таблицы employee, возвращает объект типа result и дальше все выводим.
+
+**Запускаем ./main 3**
+
+В main вызываем функцию **app.run_app(argv[1][0] - '0', NULL, NULL, NULL)**, в функции **run_app** вызываем функцию **print_database(tr)** класса **my_application** и передаем ему объекта типа **pqxx::work** для выполнения SQL запроса вида **pqxx::result r = tr.exec("SELECT first_name, paternal_name, last_name, birth_date, sex FROM employee ORDER BY first_name ASC, paternal_name ASC, last_name ASC;")**. Который выбирает заданные поля из таблицы employee, возвращает объект типа result и дальше все выводим.
+
+Результат:
+
+
 
 Пример вставь картинку.
 
