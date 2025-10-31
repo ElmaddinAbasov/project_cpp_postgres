@@ -24,7 +24,7 @@ const char* my_application::create_table_sql_query()
                                        "first_name VARCHAR(80) NOT NULL,"
                                        "paternal_name VARCHAR(80) NOT NULL,"
                                        "last_name VARCHAR(80) NOT NULL,"
-                                       "birth_date DATE NOT NULL,"				//DATE
+                                       "birth_date DATE NOT NULL,"				
                                        "sex VARCHAR(80) NOT NULL"
                                        ");";
 	return sql_query;
