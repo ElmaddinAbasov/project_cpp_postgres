@@ -34,7 +34,7 @@ void employee::get_digits(char* abuf, int age, int pos)
 
 employee::employee()
 {
-
+	printf(" ");
 }
 
 employee::employee(const char* string_literal, const char* brth_dt, const char* sx)
