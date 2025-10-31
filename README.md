@@ -10,6 +10,8 @@
 - makefile
 
 # Компиляция
+
+Перед компиляцией в файле app.h в строке const char* default_database = "dbname=postgres user=postgres password=db1996 host=localhost port = 5432"; нужно будет указать пароль, который вы используете, для правильной работы программы
 make main
 
 # Небольшое описание
