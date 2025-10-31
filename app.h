@@ -4,7 +4,7 @@
 class my_application
 {
 	enum {length = 255};
-#if 0	
+#if 1	
 	enum {lines_to_fill = 1000000};
 #else
 	enum {lines_to_fill = 1000};
