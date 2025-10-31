@@ -17,7 +17,7 @@ class employee
 	char paternal_name[length];
 	char last_name[length];
 	char birth_date[length];
-	char sex[length];
+	char sex[length];												//sex
 	void extract(const char* birth, int& arg, int& pos);
 	void extract(char* buf, const char* string_literal, int& pos);
 	void get_digits(char* abuf, int age, int pos);
